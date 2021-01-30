@@ -5,11 +5,11 @@ import "./TopNavBar.css";
 import history from "../history";
 
 class TopNavBar extends React.Component {
-    state = { activeItem: "from-decimal" };
+    state = { activeItem: this.props.initialPath };
 
     onClick = (e, { name }) => {
         this.setState({ activeItem: name });
-        history.push(`/${name}`);
+        history.push(name);
     };
 
     render() {
@@ -18,13 +18,13 @@ class TopNavBar extends React.Component {
         return (
             <Menu pointing secondary className=".top-nav-bar">
                 <Menu.Item
-                    name="from-decimal"
-                    active={activeItem === "from-decimal"}
+                    name="/from-decimal"
+                    active={activeItem === "/from-decimal"}
                     onClick={this.onClick}
                 ></Menu.Item>
                 <Menu.Item
-                    name="to-decimal"
-                    active={activeItem === "to-decimal"}
+                    name="/to-decimal"
+                    active={activeItem === "/to-decimal"}
                     onClick={this.onClick}
                 ></Menu.Item>
             </Menu>

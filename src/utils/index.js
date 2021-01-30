@@ -27,7 +27,7 @@ export const digitToDecimal = s => {
 
 export const radixToDecimal = (radixNumber, radix = 16) => {
     if (radix < 2 || radix > 36) {
-        return Number.NaN;
+        throw new Error(`Radix (${radix}) is out of range [2..36]`);
     }
     let result = 0;
     let s = "" + radixNumber;
@@ -41,4 +41,19 @@ export const radixToDecimal = (radixNumber, radix = 16) => {
         p += 1;
     }
     return result;
+};
+
+export const hasNotes = steps => {
+    if (typeof steps !== "object") {
+        throw new Error("Steps is not an object");
+    }
+
+    return (
+        steps.reduce((acc, step) => {
+            if (step.notes) {
+                acc += 1;
+            }
+            return acc;
+        }, 0) > 0
+    );
 };

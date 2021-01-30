@@ -3,7 +3,7 @@ import { Form, Header, Table } from "semantic-ui-react";
 
 // import "./FromDecimal.css";
 import { digits } from "../constants";
-import { decimalToRadix } from "../utils";
+import { decimalToRadix, hasNotes } from "../utils";
 
 class FromDecimal extends React.Component {
     state = { radix: 16, decimalNumber: "" };
@@ -42,17 +42,6 @@ class FromDecimal extends React.Component {
         return steps;
     };
 
-    hasNotes = steps => {
-        return (
-            steps.reduce((acc, step) => {
-                if (step.notes) {
-                    acc += 1;
-                }
-                return acc;
-            }, 0) > 0
-        );
-    };
-
     renderAnswer = () => {
         const { decimalNumber, radix } = this.state;
         if (decimalNumber) {
@@ -68,16 +57,15 @@ class FromDecimal extends React.Component {
         }
     };
 
-    renderStepsBody = steps => {
+    renderStepsBody = (steps, notes) => {
         if (steps && steps.length) {
-            const hasNotes = this.hasNotes(steps);
             return steps.map((step, index) => {
                 return (
                     <Table.Row key={index}>
                         <Table.Cell>{step.operation}</Table.Cell>
                         <Table.Cell>{step.quotient}</Table.Cell>
                         <Table.Cell>{step.remainder}</Table.Cell>
-                        {hasNotes ? <Table.Cell>{step.notes}</Table.Cell> : null}
+                        {notes ? <Table.Cell>{step.notes}</Table.Cell> : null}
                     </Table.Row>
                 );
             });
@@ -88,7 +76,7 @@ class FromDecimal extends React.Component {
     renderSteps = () => {
         const { decimalNumber, radix } = this.state;
         const steps = this.getSteps(decimalNumber, radix);
-        const hasNotes = this.hasNotes(steps);
+        const notes = hasNotes(steps);
         if (steps && steps.length) {
             return (
                 <Table celled>
@@ -97,10 +85,10 @@ class FromDecimal extends React.Component {
                             <Table.HeaderCell>Operation</Table.HeaderCell>
                             <Table.HeaderCell>Quotient</Table.HeaderCell>
                             <Table.HeaderCell>Remainder</Table.HeaderCell>
-                            {hasNotes ? <Table.HeaderCell>Notes</Table.HeaderCell> : null}
+                            {notes ? <Table.HeaderCell>Notes</Table.HeaderCell> : null}
                         </Table.Row>
                     </Table.Header>
-                    <Table.Body>{this.renderStepsBody(steps)}</Table.Body>
+                    <Table.Body>{this.renderStepsBody(steps, notes)}</Table.Body>
                 </Table>
             );
         }

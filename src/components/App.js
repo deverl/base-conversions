@@ -7,12 +7,15 @@ import FromDecimal from "./FromDecimal";
 import ToDecimal from "./ToDecimal";
 
 class App extends React.Component {
-    componentDidMount() {}
+    state = { initialPath: "/" };
 
     render() {
         return (
             <div className="ui container app-container">
-                <TopNavBar />
+                <TopNavBar
+                    key={window.location.pathname}
+                    initialPath={window.location.pathname}
+                />
                 <Switch>
                     <Route path="/" exact>
                         <FromDecimal />
