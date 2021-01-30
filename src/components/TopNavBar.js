@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Menu } from "semantic-ui-react";
 
 import "./TopNavBar.css";
@@ -8,7 +8,6 @@ class TopNavBar extends React.Component {
     state = { activeItem: "from-decimal" };
 
     onClick = (e, { name }) => {
-        console.log("TopNavBar: name = " + name);
         this.setState({ activeItem: name });
         history.push(`/${name}`);
     };
