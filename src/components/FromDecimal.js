@@ -3,6 +3,7 @@ import { Form, Header, Table } from "semantic-ui-react";
 
 // import "./FromDecimal.css";
 import { digits } from "../constants";
+import { decimalToRadix } from "../utils";
 
 class FromDecimal extends React.Component {
     state = { radix: 16, decimalNumber: "" };
@@ -15,20 +16,6 @@ class FromDecimal extends React.Component {
 
     onChange = e => {
         this.setState({ [e.target.name]: e.target.value });
-    };
-
-    decimalToRadix = (decimalNumber, radix = 16) => {
-        if (radix < 2 || radix > 36) {
-            return "";
-        }
-        let result = "";
-        while (decimalNumber > 0) {
-            let m = decimalNumber % radix;
-            let c = digits[m];
-            result = c + result;
-            decimalNumber = (decimalNumber / radix) | 0;
-        }
-        return result;
     };
 
     getSteps = (decimalNumber, radix) => {
@@ -69,7 +56,7 @@ class FromDecimal extends React.Component {
     renderAnswer = () => {
         const { decimalNumber, radix } = this.state;
         if (decimalNumber) {
-            const answer = this.decimalToRadix(decimalNumber, radix);
+            const answer = decimalToRadix(decimalNumber, radix);
             return (
                 <React.Fragment>
                     <div className="answer">{answer}</div>
@@ -125,7 +112,7 @@ class FromDecimal extends React.Component {
         const error = radix < 2 || radix > 36;
 
         return (
-            <div className="ui container app-container">
+            <React.Fragment>
                 <Header as="h1">Convert a decimal number to a different radix</Header>
                 {error ? (
                     <Header as="h3" style={{ color: "tomato" }}>
@@ -159,7 +146,7 @@ class FromDecimal extends React.Component {
                 </Form>
                 {this.renderAnswer()}
                 {this.renderSteps()}
-            </div>
+            </React.Fragment>
         );
     }
 }
