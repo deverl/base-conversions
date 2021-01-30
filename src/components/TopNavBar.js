@@ -19,7 +19,7 @@ class TopNavBar extends React.Component {
             <Menu pointing secondary className=".top-nav-bar">
                 <Menu.Item
                     name="/from-decimal"
-                    active={activeItem === "/from-decimal"}
+                    active={activeItem === "/from-decimal" || activeItem === "/"}
                     onClick={this.onClick}
                 ></Menu.Item>
                 <Menu.Item
