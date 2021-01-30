@@ -1,7 +1,15 @@
+body {
+    
+}
+
 .app-container {
     margin-top: 60px;
 }
 
-.app-container .ui.input input {
-    max-width: 200px !important;
+.app-container input[name="radix"] {
+    width: 120px !important;
+}
+
+.app-container input[name="decimalNumber"] {
+    width: 250px !important;
 }

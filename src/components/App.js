@@ -101,29 +101,36 @@ class App extends React.Component {
                     </Header>
                 ) : null}
                 <Form onSubmit={this.onSubmit}>
-                    <Form.Field>
-                        <label>Radix</label>
-                        <Form.Input
-                            error={error}
-                            type="number"
-                            min="2"
-                            max="36"
-                            name="radix"
-                            value={radix}
-                            onChange={this.onChange}
-                        />
-                    </Form.Field>
-                    <Form.Field>
-                        <label>Decimal number</label>
-                        <Form.Input
-                            type="number"
-                            name="decimalNumber"
-                            value={decimalNumber}
-                            onChange={this.onChange}
-                        />
-                    </Form.Field>
+                    <Form.Group>
+                        <Form.Field>
+                            <label>Radix</label>
+                            <Form.Input
+                                error={error}
+                                type="number"
+                                min="2"
+                                max="36"
+                                name="radix"
+                                value={radix}
+                                onChange={this.onChange}
+                            />
+                        </Form.Field>
+                        <Form.Field>
+                            <label>Decimal number to convert</label>
+                            <Form.Input
+                                type="number"
+                                name="decimalNumber"
+                                value={decimalNumber}
+                                onChange={this.onChange}
+                            />
+                        </Form.Field>
+                    </Form.Group>
                 </Form>
-                <Header as="h2">{this.decimalToRadix(decimalNumber, radix)}</Header>
+                {decimalNumber ? (
+                    <Header as="h2">{`${decimalNumber} is ${this.decimalToRadix(
+                        decimalNumber,
+                        radix
+                    )} in base ${radix}`}</Header>
+                ) : null}
                 {this.renderSteps()}
             </div>
         );
