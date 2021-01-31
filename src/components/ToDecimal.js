@@ -3,9 +3,11 @@ import { Header, Form, Table } from "semantic-ui-react";
 
 // import './ToDecimal.css';
 import { decimalToRadix, radixToDecimal, hasNotes, digitToDecimal } from "../utils";
+import { digits } from "../constants";
+import { isValidRadix } from "../utils";
 
 class ToDecimal extends React.Component {
-    state = { radix: 16, radixNumber: "" };
+    state = { radix: 16, radixNumber: "", invalidInput: false };
 
     componentDidMount() {}
 
@@ -16,7 +18,28 @@ class ToDecimal extends React.Component {
     };
 
     onChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
+        this.setState({ [e.target.name]: e.target.value }, () => {
+            this.inputContainsValidDigits();
+        });
+    };
+
+    inputContainsValidDigits = () => {
+        const { radixNumber, radix } = this.state;
+        const validDigits = digits.slice(0, radix);
+        console.log("validDigits = " + JSON.stringify(validDigits));
+        let valid = true;
+        for (let i = 0; i < radixNumber.length; ++i) {
+            const c = radixNumber[i].toUpperCase();
+            const idx = validDigits.indexOf(c);
+            if (idx === -1) {
+                valid = false;
+            }
+        }
+        if (valid) {
+            this.setState({ invalidInput: false });
+        } else {
+            this.setState({ invalidInput: true });
+        }
     };
 
     renderAnswer = () => {
@@ -36,7 +59,7 @@ class ToDecimal extends React.Component {
 
     getSteps = (radixNumber, radix) => {
         if (radix < 2 || radix > 36) {
-            throw new Error(`Radix (${radix}) is out of range [2..36]`);
+            return [];
         }
         const steps = [{ operation: "Initialize sum to zero", sum: 0 }];
         let result = 0;
@@ -98,24 +121,46 @@ class ToDecimal extends React.Component {
         return null;
     };
 
+    renderErrors = () => {
+        const { radix, invalidInput } = this.state;
+        const invalidRadix = !isValidRadix(radix);
+
+        if (!invalidRadix && !invalidInput) {
+            return null;
+        }
+
+        if (invalidRadix) {
+            return (
+                <Header as="h3" style={{ color: "tomato" }}>
+                    Radix must be in the range of [2..36]
+                </Header>
+            );
+        }
+
+        if (invalidInput) {
+            return (
+                <Header as="h3" style={{ color: "tomato" }}>
+                    Input contains invalid base {radix} digits.
+                </Header>
+            );
+        }
+    };
+
     render() {
-        const { radix, radixNumber } = this.state;
-        const error = radix < 2 || radix > 36;
+        const { radix, radixNumber, invalidInput } = this.state;
+        const invalidRadix = !isValidRadix(radix);
+        const errors = invalidRadix || invalidInput;
 
         return (
             <React.Fragment>
                 <Header as="h1">Convert to decimal number from a different radix</Header>
-                {error ? (
-                    <Header as="h3" style={{ color: "tomato" }}>
-                        Radix must be in the range of [2..36]
-                    </Header>
-                ) : null}
+                {this.renderErrors()}
                 <Form onSubmit={this.onSubmit}>
                     <Form.Group>
                         <Form.Field>
                             <label>Radix</label>
                             <Form.Input
-                                error={error}
+                                error={invalidRadix}
                                 type="number"
                                 min="2"
                                 max="36"
@@ -128,14 +173,15 @@ class ToDecimal extends React.Component {
                             <label>Number (in base {radix}) to convert</label>
                             <Form.Input
                                 name="radixNumber"
+                                error={invalidInput}
                                 value={radixNumber}
                                 onChange={this.onChange}
                             />
                         </Form.Field>
                     </Form.Group>
                 </Form>
-                {this.renderAnswer()}
-                {this.renderSteps()}
+                {!errors ? this.renderAnswer() : null}
+                {!errors ? this.renderSteps() : null}
             </React.Fragment>
         );
     }

@@ -1,5 +1,10 @@
 import { digits } from "../constants";
 
+
+export const isValidRadix = radix => {
+    return (radix > 1 && radix < 37);
+};
+
 export const decimalToRadix = (decimalNumber, radix = 16) => {
     if (radix < 2 || radix > 36) {
         return "";

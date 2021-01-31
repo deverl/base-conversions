@@ -3,7 +3,7 @@ import { Form, Header, Table } from "semantic-ui-react";
 
 // import "./FromDecimal.css";
 import { digits } from "../constants";
-import { decimalToRadix, hasNotes } from "../utils";
+import { decimalToRadix, hasNotes, isValidRadix } from "../utils";
 
 class FromDecimal extends React.Component {
     state = { radix: 16, decimalNumber: "" };
@@ -97,12 +97,12 @@ class FromDecimal extends React.Component {
 
     render() {
         const { radix, decimalNumber } = this.state;
-        const error = radix < 2 || radix > 36;
+        const invalidRadix = !isValidRadix(radix);
 
         return (
             <React.Fragment>
                 <Header as="h1">Convert a decimal number to a different radix</Header>
-                {error ? (
+                {invalidRadix ? (
                     <Header as="h3" style={{ color: "tomato" }}>
                         Radix must be in the range of [2..36]
                     </Header>
@@ -112,7 +112,7 @@ class FromDecimal extends React.Component {
                         <Form.Field>
                             <label>Radix</label>
                             <Form.Input
-                                error={error}
+                                error={invalidRadix}
                                 type="number"
                                 min="2"
                                 max="36"
