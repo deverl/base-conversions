@@ -1,0 +1,3 @@
+export const SET_RADIX = "SET_RADIX";
+export const SET_DECIMAL_NUMBER = "SET_DECIMAL_NUMBER";
+export const SET_RADIX_NUMBER = "SET_RADIX_NUMBER";

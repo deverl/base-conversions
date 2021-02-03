@@ -1,14 +1,14 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Header, Form, Table } from "semantic-ui-react";
 
 // import './ToDecimal.css';
 import { decimalToRadix, radixToDecimal, hasNotes, digitToDecimal } from "../utils";
 import { digits } from "../constants";
 import { isValidRadix } from "../utils";
+import { setRadix, setRadixNumber, setDecimalNumber } from "../actions";
 
 class ToDecimal extends React.Component {
-    state = { radix: 16, radixNumber: "", invalidInput: false };
-
     componentDidMount() {}
 
     onSubmit = e => {
@@ -18,13 +18,18 @@ class ToDecimal extends React.Component {
     };
 
     onChange = e => {
-        this.setState({ [e.target.name]: e.target.value }, () => {
-            this.inputContainsValidDigits();
-        });
+        if (e.target.name === "radix") {
+            this.props.setRadix(e.target.value);
+        } else if (e.target.name === "radixNumber") {
+            this.props.setRadixNumber(e.target.value);
+        } else {
+            throw new Error("Unrecognized input name!");
+        }
+        this.inputContainsValidDigits();
     };
 
     inputContainsValidDigits = () => {
-        const { radixNumber, radix } = this.state;
+        const { radixNumber, radix } = this.props;
         const validDigits = digits.slice(0, radix);
         console.log("validDigits = " + JSON.stringify(validDigits));
         let valid = true;
@@ -43,9 +48,10 @@ class ToDecimal extends React.Component {
     };
 
     renderAnswer = () => {
-        const { radixNumber, radix } = this.state;
+        const { radixNumber, radix } = this.props;
         if (radixNumber) {
             const answer = radixToDecimal(radixNumber, radix);
+            this.props.setDecimalNumber(answer);
             return (
                 <React.Fragment>
                     <div className="answer">{answer}</div>
@@ -101,7 +107,7 @@ class ToDecimal extends React.Component {
     };
 
     renderSteps = () => {
-        const { radixNumber, radix } = this.state;
+        const { radixNumber, radix } = this.props;
         const steps = this.getSteps(radixNumber, radix);
         const notes = hasNotes(steps);
         if (steps && steps.length > 1) {
@@ -122,7 +128,7 @@ class ToDecimal extends React.Component {
     };
 
     renderErrors = () => {
-        const { radix, invalidInput } = this.state;
+        const { radix, invalidInput } = this.props;
         const invalidRadix = !isValidRadix(radix);
 
         if (!invalidRadix && !invalidInput) {
@@ -147,7 +153,7 @@ class ToDecimal extends React.Component {
     };
 
     render() {
-        const { radix, radixNumber, invalidInput } = this.state;
+        const { radix, radixNumber, invalidInput } = this.props;
         const invalidRadix = !isValidRadix(radix);
         const errors = invalidRadix || invalidInput;
 
@@ -187,4 +193,13 @@ class ToDecimal extends React.Component {
     }
 }
 
-export default ToDecimal;
+const mapStateToProps = (state, ownProps) => {
+    return {
+        radix: state.radix,
+        radixNumber: state.radixNumber,
+    };
+};
+
+export default connect(mapStateToProps, { setRadix, setRadixNumber, setDecimalNumber })(
+    ToDecimal
+);

@@ -1,13 +1,13 @@
 import React from "react";
+import { connect } from "react-redux";
 import { Form, Header, Table } from "semantic-ui-react";
 
 // import "./FromDecimal.css";
 import { digits } from "../constants";
 import { decimalToRadix, hasNotes, isValidRadix } from "../utils";
+import { setRadix, setDecimalNumber, setRadixNumber } from "../actions";
 
 class FromDecimal extends React.Component {
-    state = { radix: 16, decimalNumber: "" };
-
     onSubmit = e => {
         e.preventDefault();
         e.stopPropagation();
@@ -15,7 +15,13 @@ class FromDecimal extends React.Component {
     };
 
     onChange = e => {
-        this.setState({ [e.target.name]: e.target.value });
+        if (e.target.name === "radix") {
+            this.props.setRadix(e.target.value);
+        } else if (e.target.name === "decimalNumber") {
+            this.props.setDecimalNumber(e.target.value);
+        } else {
+            throw new Error("Unrecognized input name!");
+        }
     };
 
     getSteps = (decimalNumber, radix) => {
@@ -43,9 +49,10 @@ class FromDecimal extends React.Component {
     };
 
     renderAnswer = () => {
-        const { decimalNumber, radix } = this.state;
+        const { decimalNumber, radix } = this.props;
         if (decimalNumber) {
             const answer = decimalToRadix(decimalNumber, radix);
+            this.props.setRadixNumber(answer);
             return (
                 <React.Fragment>
                     <div className="answer">{answer}</div>
@@ -74,7 +81,7 @@ class FromDecimal extends React.Component {
     };
 
     renderSteps = () => {
-        const { decimalNumber, radix } = this.state;
+        const { decimalNumber, radix } = this.props;
         const steps = this.getSteps(decimalNumber, radix);
         const notes = hasNotes(steps);
         if (steps && steps.length) {
@@ -96,7 +103,7 @@ class FromDecimal extends React.Component {
     };
 
     render() {
-        const { radix, decimalNumber } = this.state;
+        const { radix, decimalNumber } = this.props;
         const invalidRadix = !isValidRadix(radix);
 
         return (
@@ -139,4 +146,13 @@ class FromDecimal extends React.Component {
     }
 }
 
-export default FromDecimal;
+const mapStateToProps = (state, ownProps) => {
+    return {
+        radix: state.radix,
+        decimalNumber: state.decimalNumber,
+    };
+};
+
+export default connect(mapStateToProps, { setRadix, setDecimalNumber, setRadixNumber })(
+    FromDecimal
+);
