@@ -9,12 +9,19 @@ import ToDecimal from "./ToDecimal";
 class App extends React.Component {
     state = { initialPath: "/" };
 
+    getInitialPath = () => {
+        let path = "/";
+        if (window.location.hash.length > 2) {
+            path = window.location.hash.substr(2);
+        }
+        return path;
+    };
+
     render() {
-        const pathname = window.location.hash.substr(2);
-        console.log("App.render. pathname = " + pathname);
+        const path = this.getInitialPath();
         return (
             <div className="ui container app-container">
-                <TopNavBar key={pathname} initialPath={pathname} />
+                <TopNavBar key={path} initialPath={path} />
                 <Switch>
                     <Route path="/" exact>
                         <FromDecimal />
