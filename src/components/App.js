@@ -10,12 +10,11 @@ class App extends React.Component {
     state = { initialPath: "/" };
 
     render() {
+        const pathname = window.location.hash.substr(2);
+        console.log("App.render. pathname = " + pathname);
         return (
             <div className="ui container app-container">
-                <TopNavBar
-                    key={window.location.pathname}
-                    initialPath={window.location.pathname}
-                />
+                <TopNavBar key={pathname} initialPath={pathname} />
                 <Switch>
                     <Route path="/" exact>
                         <FromDecimal />
