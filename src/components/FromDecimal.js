@@ -8,6 +8,14 @@ import { decimalToRadix, hasNotes, isValidRadix } from "../utils";
 import { setRadix, setDecimalNumber, setRadixNumber } from "../actions";
 
 class FromDecimal extends React.Component {
+    radixNumber = "";
+
+    componentDidMount() {}
+
+    componentWillUnmount() {
+        this.props.setRadixNumber(this.radixNumber);
+    }
+
     onSubmit = e => {
         e.preventDefault();
         e.stopPropagation();
@@ -52,7 +60,7 @@ class FromDecimal extends React.Component {
         const { decimalNumber, radix } = this.props;
         if (decimalNumber) {
             const answer = decimalToRadix(decimalNumber, radix);
-            this.props.setRadixNumber(answer);
+            this.radixNumber = answer;
             return (
                 <React.Fragment>
                     <div className="answer">{answer}</div>

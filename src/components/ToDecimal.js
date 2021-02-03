@@ -9,7 +9,15 @@ import { isValidRadix } from "../utils";
 import { setRadix, setRadixNumber, setDecimalNumber } from "../actions";
 
 class ToDecimal extends React.Component {
+    state = { invalidInput: false };
+
+    decimalNumber = "";
+
     componentDidMount() {}
+
+    componentWillUnmount() {
+        this.props.setDecimalNumber(this.decimalNumber);
+    }
 
     onSubmit = e => {
         e.preventDefault();
@@ -20,21 +28,22 @@ class ToDecimal extends React.Component {
     onChange = e => {
         if (e.target.name === "radix") {
             this.props.setRadix(e.target.value);
+            this.inputContainsValidDigits(this.props.radixNumber, e.target.value);
         } else if (e.target.name === "radixNumber") {
             this.props.setRadixNumber(e.target.value);
+            this.inputContainsValidDigits(e.target.value, this.props.radix);
         } else {
             throw new Error("Unrecognized input name!");
         }
-        this.inputContainsValidDigits();
     };
 
-    inputContainsValidDigits = () => {
-        const { radixNumber, radix } = this.props;
+    inputContainsValidDigits = (inputValue, radix) => {
+        // console.log(`inputContainsValidDigits: value = ${inputValue}, radix = ${radix}`);
         const validDigits = digits.slice(0, radix);
-        console.log("validDigits = " + JSON.stringify(validDigits));
+        // console.log("validDigits = " + JSON.stringify(validDigits));
         let valid = true;
-        for (let i = 0; i < radixNumber.length; ++i) {
-            const c = radixNumber[i].toUpperCase();
+        for (let i = 0; i < inputValue.length; ++i) {
+            const c = inputValue[i].toUpperCase();
             const idx = validDigits.indexOf(c);
             if (idx === -1) {
                 valid = false;
@@ -51,7 +60,7 @@ class ToDecimal extends React.Component {
         const { radixNumber, radix } = this.props;
         if (radixNumber) {
             const answer = radixToDecimal(radixNumber, radix);
-            this.props.setDecimalNumber(answer);
+            this.decimalNumber = answer;
             return (
                 <React.Fragment>
                     <div className="answer">{answer}</div>
@@ -128,7 +137,8 @@ class ToDecimal extends React.Component {
     };
 
     renderErrors = () => {
-        const { radix, invalidInput } = this.props;
+        const { invalidInput } = this.state;
+        const { radix } = this.props;
         const invalidRadix = !isValidRadix(radix);
 
         if (!invalidRadix && !invalidInput) {
@@ -153,7 +163,8 @@ class ToDecimal extends React.Component {
     };
 
     render() {
-        const { radix, radixNumber, invalidInput } = this.props;
+        const { invalidInput } = this.state;
+        const { radix, radixNumber } = this.props;
         const invalidRadix = !isValidRadix(radix);
         const errors = invalidRadix || invalidInput;
 
