@@ -25,7 +25,7 @@ class FromDecimal extends React.Component {
         const steps = [];
         while (decimalNumber > 0) {
             let m = decimalNumber % radix;
-            let q = (decimalNumber / radix) | 0;
+            let q = parseInt(decimalNumber / radix);
             let c = digits[m];
             let step = {};
             step.operation = `${decimalNumber} / ${radix}`;
@@ -37,7 +37,7 @@ class FromDecimal extends React.Component {
                 step.notes = "";
             }
             steps.push(step);
-            decimalNumber = (decimalNumber / radix) | 0;
+            decimalNumber = parseInt(decimalNumber / radix);
         }
         return steps;
     };

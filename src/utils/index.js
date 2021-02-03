@@ -1,8 +1,7 @@
 import { digits } from "../constants";
 
-
 export const isValidRadix = radix => {
-    return (radix > 1 && radix < 37);
+    return radix > 1 && radix < 37;
 };
 
 export const decimalToRadix = (decimalNumber, radix = 16) => {
@@ -14,7 +13,7 @@ export const decimalToRadix = (decimalNumber, radix = 16) => {
         let m = decimalNumber % radix;
         let c = digits[m];
         result = c + result;
-        decimalNumber = (decimalNumber / radix) | 0;
+        decimalNumber = parseInt(decimalNumber / radix);
     }
     return result;
 };
