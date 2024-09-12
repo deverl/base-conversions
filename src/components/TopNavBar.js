@@ -2,14 +2,12 @@ import React from "react";
 import { Menu } from "semantic-ui-react";
 
 import "./TopNavBar.css";
-import history from "../history";
 
 class TopNavBar extends React.Component {
     state = { activeItem: this.props.initialPath };
 
     onClick = (e, { name }) => {
         this.setState({ activeItem: name });
-        history.push(`/${name}`);
     };
 
     render() {

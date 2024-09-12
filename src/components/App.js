@@ -1,5 +1,5 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import "./App.css";
 import TopNavBar from "./TopNavBar";
@@ -22,17 +22,11 @@ class App extends React.Component {
         return (
             <div className="ui container app-container">
                 <TopNavBar key={path} initialPath={path} />
-                <Switch>
-                    <Route path="/" exact>
-                        <FromDecimal />
-                    </Route>
-                    <Route path="/from-decimal">
-                        <FromDecimal />
-                    </Route>
-                    <Route path="/to-decimal">
-                        <ToDecimal />
-                    </Route>
-                </Switch>
+                <Routes>
+                    <Route path="/" exact element={<FromDecimal />} />
+                    <Route path="/from-decimal" element={<FromDecimal />} />
+                    <Route path="/to-decimal" element={<ToDecimal />} />
+                </Routes>
             </div>
         );
     }
