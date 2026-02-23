@@ -73,25 +73,26 @@ class ToDecimal extends React.Component {
     };
 
     getSteps = (radixNumber, radix) => {
-        if (radix < 2 || radix > 36) {
+        const r = parseInt(radix, 10);
+        if (Number.isNaN(r) || r < 2 || r > 36) {
             return [];
         }
         const steps = [{ operation: "Initialize sum to zero", sum: 0 }];
         let result = 0;
-        let s = "" + radixNumber;
+        const s = String(radixNumber).trim();
         let i = s.length - 1;
         let p = 0;
         while (i >= 0) {
-            const step = {};
             const c = s[i];
             const v = digitToDecimal(c.toUpperCase());
             const prevResult = result;
-            result += v * radix ** p;
-            step.operation = `sum = ${prevResult} + (${v} * ${radix} ** ${p})`;
-            step.sum = result;
-            if (v > 10) {
-                let d = decimalToRadix(v, radix);
-                step.notes = `${d} in base ${radix} = ${v} in decimal`;
+            result += v * Math.pow(r, p);
+            const step = {
+                operation: `sum = ${prevResult} + (${v} * ${r} ** ${p})`,
+                sum: result,
+            };
+            if (v > 9) {
+                step.notes = `${decimalToRadix(v, r)} in base ${r} = ${v} in decimal`;
             }
             steps.push(step);
             i -= 1;

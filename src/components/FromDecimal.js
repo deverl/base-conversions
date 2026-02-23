@@ -33,25 +33,25 @@ class FromDecimal extends React.Component {
     };
 
     getSteps = (decimalNumber, radix) => {
-        if (radix < 2 || radix > 36) {
+        const n = parseInt(decimalNumber, 10);
+        const r = parseInt(radix, 10);
+        if (Number.isNaN(n) || Number.isNaN(r) || r < 2 || r > 36 || n <= 0) {
             return [];
         }
         const steps = [];
-        while (decimalNumber > 0) {
-            let m = decimalNumber % radix;
-            let q = parseInt(decimalNumber / radix);
-            let c = digits[m];
-            let step = {};
-            step.operation = `${decimalNumber} / ${radix}`;
-            step.quotient = "" + q;
-            step.remainder = "" + c;
-            if (m > 9) {
-                step.notes = `${c} is ${m} in decimal`;
-            } else {
-                step.notes = "";
-            }
+        let num = n;
+        while (num > 0) {
+            const m = num % r;
+            const q = Math.floor(num / r);
+            const c = digits[m];
+            const step = {
+                operation: `${num} / ${r}`,
+                quotient: String(q),
+                remainder: c,
+                notes: m > 9 ? `${c} is ${m} in decimal` : "",
+            };
             steps.push(step);
-            decimalNumber = parseInt(decimalNumber / radix);
+            num = q;
         }
         return steps;
     };
