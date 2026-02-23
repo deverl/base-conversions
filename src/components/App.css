@@ -28,3 +28,12 @@ body {
 .app-container .table {
     margin-top: 40px;
 }
+
+.app-version {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    padding: 6px 10px;
+    font-size: 12px;
+    color: #888;
+}

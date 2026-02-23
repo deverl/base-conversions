@@ -2,6 +2,7 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 
 import "./App.css";
+import { version } from "../version";
 import TopNavBar from "./TopNavBar";
 import FromDecimal from "./FromDecimal";
 import ToDecimal from "./ToDecimal";
@@ -16,6 +17,7 @@ class App extends React.Component {
                     <Route path="/from-decimal" element={<FromDecimal />} />
                     <Route path="/to-decimal" element={<ToDecimal />} />
                 </Routes>
+                <div className="app-version">v{version}</div>
             </div>
         );
     }
